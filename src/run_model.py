@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
 # Load data
-df = pd.read_csv('heart_cleveland_upload.csv')
+df = pd.read_csv('../Notebooks/heart_cleveland_upload.csv')
 
 # Nominal columns
 nominal_cols = ['cp', 'restecg', 'slope', 'thal']

@@ -2,7 +2,7 @@ import dash
 from dash import dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 
-from run_model import predict_patient
+from src.run_model import predict_patient
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server  # Required for Render
