@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
@@ -8,7 +9,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
 # Load data
-df = pd.read_csv('../Notebooks/heart_cleveland_upload.csv')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+csv_path = os.path.join(BASE_DIR, 'Notebooks', 'heart_cleveland_upload.csv')
+df = pd.read_csv(csv_path)
 
 # Nominal columns
 nominal_cols = ['cp', 'restecg', 'slope', 'thal']
