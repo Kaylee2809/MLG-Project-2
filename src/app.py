@@ -1,16 +1,27 @@
+# Import core Dash libraries
 import dash
 from dash import dcc, html, Input, Output, State
+
+# Import Bootstrap components for styling
 import dash_bootstrap_components as dbc
 
+# Import the prediction function from the ML module
 from src.run_model import predict_patient
 
+# Initialize the Dash app with a Bootstrap theme
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-server = app.server  # Required for Render
 
+# Expose the server for deployment
+server = app.server  
+
+# Define the layout of the web application
 app.layout = dbc.Container([
-    html.H1("❤️ Heart Disease Risk Predictor", className="text-center my-4"),
+     # Application title
+    html.H1("🫀 Heart Disease Risk Predictor 🫀", className="text-center my-4"),
 
+    # Create two columns for input fields
     dbc.Row([
+        # Left column inputs
         dbc.Col([
             dbc.Label("Age"),
             dbc.Input(id="age", type="number", value=50),
@@ -31,6 +42,7 @@ app.layout = dbc.Container([
             dbc.Input(id="fbs", type="number", value=0),
         ]),
 
+        # Right column inputs
         dbc.Col([
             dbc.Label("Resting ECG"),
             dbc.Input(id="restecg", type="number", value=0),
@@ -57,6 +69,7 @@ app.layout = dbc.Container([
 
     html.Br(),
 
+    # Button to trigger prediction
     dbc.Button("Predict Risk", id="predict-btn", color="primary", className="w-100"),
 
     html.Br(), html.Br(),
@@ -64,9 +77,12 @@ app.layout = dbc.Container([
     html.Div(id="output-result", className="text-center fs-4")
 ])
 
+# Callback function that runs when the button is clicked
 @app.callback(
-    Output("output-result", "children"),
-    Input("predict-btn", "n_clicks"),
+    Output("output-result", "children"),  # Output goes to this div
+    Input("predict-btn", "n_clicks"), # Triggered by button click
+
+    # Collect all input values from the form
     State("age", "value"),
     State("sex", "value"),
     State("cp", "value"),
@@ -84,9 +100,11 @@ app.layout = dbc.Container([
 def make_prediction(n_clicks, age, sex, cp, trestbps, chol, fbs,
                     restecg, thalach, exang, oldpeak, slope, ca, thal):
 
+    # Prevent prediction before button is clicked
     if n_clicks is None:
         return ""
 
+    # Store user input in dictionary format expected by the model
     patient = {
         'age': age,
         'sex': sex,
@@ -103,13 +121,16 @@ def make_prediction(n_clicks, age, sex, cp, trestbps, chol, fbs,
         'thal': thal
     }
 
+    # Call ML model to generate prediction
     result = predict_patient(patient, model_key='rf')
 
+    # Display prediction results 
     return html.Div([
         html.H3(f"Prediction: {result['risk_label']}"),
         html.P(f"Probability: {result['probability']}"),
         html.P(f"Model Used: {result['model']}")
     ])
 
+# Run the app 
 if __name__ == "__main__":
     app.run(debug=True)
